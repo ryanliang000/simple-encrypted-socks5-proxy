@@ -27,13 +27,16 @@ class ProxyThread(threading.Thread):
                             try:
                                 if sock is self.client_sock:
                                     self.server_sock.sendall(xor(data))
+                                    print "%s bytes from client" % len(data)
                                 else:
                                     self.client_sock.sendall(xor(data))
+                                     print "%s bytes from server" % len(data)
                             except:
                                 end = True
             if end:
                 try:
                     self.clien_sock.close()
+                    print("close client link: " + str(self.clien_sock.getsockname()))
                 except:
                     pass
                 try:
@@ -63,6 +66,7 @@ try:
                 if sock:
                     break
         client_sock, client_addr = servsock.accept()
+        print("accept connect from: " + str(client_addr))
         # socks_ret = socks.accept(client_sock)
         server_sock = socket.socket()
         server_sock.connect(config.server_proxy_addr)
