@@ -26,10 +26,10 @@ class ProxyThread(threading.Thread):
                         else:
                             try:
                                 if sock is self.client_sock:
-                                    #print "%s bytes from client" % len(data)
+                                    print "%s bytes from client" % len(data)
                                     self.server_sock.sendall(xor(data))
                                 else:
-                                    #print "%s bytes from server" % len(data)
+                                    print "%s bytes from server" % len(data)
                                     self.client_sock.sendall(xor(data))
                             except:
                                 end = True
@@ -46,9 +46,6 @@ class ProxyThread(threading.Thread):
     
 
 try:
-    proxy_host = "tuoxie.me"
-    proxy_port = 3031
-
     servsock = socket.socket()
     servsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     servsock.bind(config.server_bind_addr)
@@ -83,7 +80,12 @@ try:
             socks.reply(client_sock, socks_ret[1], True, False)
         else:
             server_sock.settimeout(None)
-            socks.reply(client_sock, socks_ret[1], True, True)
+            port = server_sock.getsockname()[1]port = server_sock.getsockname()[1]
+            bindaddr={'address_type': chr(0x01),
+                      'domain_length': '',
+                      'domain': socket.inet_aton(server_sock.getsockname()[0]),
+                      'port': chr(port/256) + chr(port%256)}
+            socks.reply(client_sock, bindaddr, True, True)
             proxy = ProxyThread()
             proxy.daemon = True
             proxy.set_socks(client_sock, server_sock)
