@@ -30,7 +30,7 @@ class ProxyThread(threading.Thread):
                                     print "%s bytes from client" % len(data)
                                 else:
                                     self.client_sock.sendall(xor(data))
-                                     print "%s bytes from server" % len(data)
+                                    print "%s bytes from server" % len(data)
                             except:
                                 end = True
             if end:
